@@ -5,7 +5,7 @@ import au.com.dius.pact.consumer.dsl.PactDslJsonBody
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
 import au.com.dius.pact.consumer.junit5.PactConsumerTest
 import au.com.dius.pact.consumer.junit5.PactTestFor
-import au.com.dius.pact.core.model.RequestResponsePact
+import au.com.dius.pact.core.model.V4Pact
 import au.com.dius.pact.core.model.annotations.Pact
 import co.uk.dale.pact_android.data.DisneyRepository
 import kotlinx.coroutines.test.runTest
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 class Junit5PactTest {
 
     @Pact(consumer = "disney_android_app", provider = "disney_api")
-    fun getDisneyCharactersPact(builder: PactDslWithProvider): RequestResponsePact {
+    fun getDisneyCharactersPact(builder: PactDslWithProvider): V4Pact {
         val expectedResponseBody = PactDslJsonBody()
             .eachLike("data")
             .integerType("_id", 112)
@@ -36,7 +36,7 @@ class Junit5PactTest {
             .willRespondWith()
             .status(200)
             .body(expectedResponseBody)
-            .toPact()
+            .toPact(V4Pact::class.java)
     }
 
     @Test
@@ -52,13 +52,11 @@ class Junit5PactTest {
     }
 
     @Pact(consumer = "disney_android_app", provider = "disney_api")
-    fun getDisneyCharacter(builder: PactDslWithProvider): RequestResponsePact {
+    fun getDisneyCharacterPact(builder: PactDslWithProvider): V4Pact {
         val expectedResponseBody = PactDslJsonBody()
             .integerType("_id", 112)
             .stringType("name", "Mickey Mouse")
             .stringType("imageUrl", "https://example.com/mickey.png")
-            .closeObject()
-            ?: throw Exception("Invalid json")
 
         return builder
             .given("a disney character with id 112 exists")
@@ -68,11 +66,11 @@ class Junit5PactTest {
             .willRespondWith()
             .status(200)
             .body(expectedResponseBody)
-            .toPact()
+            .toPact(V4Pact::class.java)
     }
 
     @Test
-    @PactTestFor(pactMethod = "getDisneyCharacter")
+    @PactTestFor(pactMethod = "getDisneyCharacterPact")
     fun `test getting a single character`(mockServer: MockServer) = runTest {
         val repository = DisneyRepository(baseUrl = mockServer.getUrl())
         val character = repository.getCharacter(112)
