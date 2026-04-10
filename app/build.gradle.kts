@@ -53,7 +53,7 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter.engine)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.junit.jupiter.params)
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+    testImplementation(libs.kotlinx.coroutines.test)
 
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
@@ -81,10 +81,7 @@ dependencies {
 
 pact {
     publish {
-        // Your specific Pactflow URL
         pactBrokerUrl = "https://yorkshire-building-society.pactflow.io"
-
-        // Authentication Token (stored in your ENV variables)
         pactBrokerToken = "k0xg2l3mRoGHrCo0vAPWUQ"
 
         // Optional: Tag the pact with the current git branch
