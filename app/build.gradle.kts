@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    id("au.com.dius.pact") version "4.6.15"
 }
 
 android {
@@ -76,4 +77,18 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+pact {
+    publish {
+        // Your specific Pactflow URL
+        pactBrokerUrl = "https://yorkshire-building-society.pactflow.io"
+
+        // Authentication Token (stored in your ENV variables)
+        pactBrokerToken = "k0xg2l3mRoGHrCo0vAPWUQ"
+
+        // Optional: Tag the pact with the current git branch
+        // This is crucial for the "Pending Pacts" feature we discussed
+        tags = listOf("main")
+    }
 }
